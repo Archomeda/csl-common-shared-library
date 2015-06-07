@@ -1,4 +1,6 @@
 # Cities Skylines: Common Shared Library
+[![Build status](https://ci.appveyor.com/api/projects/status/n8d0t6pp7x3b0gel/branch/master?svg=true)](https://ci.appveyor.com/project/Archomeda/csl-common-shared-library/branch/master)
+
 This small library is used for my own mods to prevent duplicated code across
 multiple mods. You can use it for your own mods as well, but keep in mind that
 this library is not complete and may have breaking changes over time. It only
