@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("CSL Common Shared")]
-[assembly: AssemblyCopyright("Copyright © Dimitri SLappendel 2015")]
+[assembly: AssemblyCopyright("Copyright © Dimitri Slappendel 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
