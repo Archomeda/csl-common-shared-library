@@ -7,4 +7,4 @@ $referencePath = ($packages.packages.package | % {(Get-Location).ToString() + "\
 
 
 # Do the actual build
-msbuild /verbosity:minimal /p:ReferencePath="$referencePath"
+msbuild /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" /verbosity:minimal /p:ReferencePath="$referencePath"
