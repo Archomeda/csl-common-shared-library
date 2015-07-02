@@ -83,7 +83,7 @@ namespace CommonShared.UI.Extensions
         {
             UITabstrip keyMappingTabstrip = GameObject.Find(GameObjectDefs.ID_KEYMAPPING_TABSTRIP).GetComponent<UITabstrip>();
             UIButton buttonTemplate = null;
-            if (keyMappingTabstrip == null)
+            if (keyMappingTabstrip != null)
             {
                 buttonTemplate = keyMappingTabstrip.GetComponentInChildren<UIButton>();
             }
