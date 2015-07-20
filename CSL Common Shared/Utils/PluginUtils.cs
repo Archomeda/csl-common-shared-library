@@ -5,6 +5,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using ColossalFramework.Plugins;
+using CommonShared.Extensions;
+using CommonShared.Proxies.Plugins;
 using ICities;
 
 namespace CommonShared.Utils
@@ -14,66 +16,42 @@ namespace CommonShared.Utils
     /// </summary>
     public static class PluginUtils
     {
+        private static IPluginManagerInteractor pluginManagerInteractor = PluginManagerProxy.Instance;
         /// <summary>
-        /// Gets the plugin info of the calling mod.
+        /// Gets or sets the plugin manager interactor that will be used.
+        /// By default this is <see cref="PluginManagerProxy"/>.
         /// </summary>
-        /// <param name="modInstance">The mod instance.</param>
-        /// <returns>The plugin info.</returns>
-        public static PluginManager.PluginInfo GetPluginInfo(IUserMod modInstance)
+        public static IPluginManagerInteractor PluginManagerInteractor
         {
-            Assembly mainAssembly;
-            return GetPluginInfo(modInstance, out mainAssembly);
+            get { return pluginManagerInteractor; }
+            set { pluginManagerInteractor = value; }
         }
 
         /// <summary>
         /// Gets the plugin info of the calling mod.
         /// </summary>
         /// <param name="modInstance">The mod instance.</param>
-        /// <param name="mainAssembly">The main assembly of the mod where IUserMod is being used.</param>
         /// <returns>The plugin info.</returns>
-        public static PluginManager.PluginInfo GetPluginInfo(IUserMod modInstance, out Assembly mainAssembly)
+        public static IPluginInfoInteractor GetPluginInfo(IUserMod modInstance)
         {
-            StackFrame[] frames = new StackTrace().GetFrames();
-
-            // Iterate through the stack to get the mod DLL that called us
-            foreach (Assembly assembly in (from f in frames select f.GetMethod().ReflectedType.Assembly).Distinct())
-            {
-                // Check if this assembly implements IUserMod somewhere
-                if (assembly.GetExportedTypes().Count(t => t.GetInterfaces().Contains(typeof(IUserMod))) > 0)
-                {
-                    // Get the instance
-                    foreach (var pluginInfo in PluginManager.instance.GetPluginsInfo())
-                    {
-                        var assemblies = ReflectionUtils.GetPrivateField<List<Assembly>>(pluginInfo, "m_Assemblies");
-                        if (assemblies.Contains(assembly) && pluginInfo.userModInstance == modInstance)
-                        {
-                            mainAssembly = assembly;
-                            return pluginInfo;
-                        }
-                    }
-                }
-            }
-
-            mainAssembly = null;
-            return null;
+            return PluginManagerInteractor.GetPluginsInfo().FirstOrDefault(i => i.UserModInstance == modInstance);
         }
-
 
         /// <summary>
         /// Gets the plugin infos of a given hash set of workshop IDs.
         /// </summary>
         /// <param name="workshopIds">The workshop IDs.</param>
         /// <returns>A dictionary with the plugins that have been found.</returns>
-        public static Dictionary<ulong, PluginManager.PluginInfo> GetPluginInfosOf(HashSet<ulong> workshopIds)
+        public static IDictionary<ulong, IPluginInfoInteractor> GetPluginInfosOf(HashSet<ulong> workshopIds)
         {
-            return PluginManager.instance.GetPluginsInfo()
-                .Where(i => workshopIds.Contains(i.publishedFileID.AsUInt64))
-                .ToDictionary(i => i.publishedFileID.AsUInt64, i => i);
+            return PluginManagerInteractor.GetPluginsInfo()
+                .Where(i => workshopIds.Contains(i.PublishedFileID.AsUInt64))
+                .ToDictionary(i => i.PublishedFileID.AsUInt64, i => i);
         }
 
 
-        private static Dictionary<string, bool> pluginEnabledList = new Dictionary<string, bool>();
-        private static Dictionary<string, HashSet<Action<bool>>> pluginStateChangeCallbacks = new Dictionary<string, HashSet<Action<bool>>>();
+        private static IDictionary<string, bool> pluginEnabledList = new Dictionary<string, bool>();
+        private static IDictionary<string, HashSet<Action<bool>>> pluginStateChangeCallbacks = new Dictionary<string, HashSet<Action<bool>>>();
 
         /// <summary>
         /// Subscribes to the event when the plugin state changes.
@@ -88,17 +66,17 @@ namespace CommonShared.Utils
         /// <summary>
         /// Subscribes to the event when the plugin state changes.
         /// </summary>
-        /// <param name="modInfo">The plugin info.</param>
+        /// <param name="pluginInfo">The plugin info.</param>
         /// <param name="callback">The callback that will be used when the state changes, with a boolean parameter that is true when the plugin is enabled, and false otherwise.</param>
-        public static void SubscribePluginStateChange(PluginManager.PluginInfo modInfo, Action<bool> callback)
+        public static void SubscribePluginStateChange(IPluginInfoInteractor pluginInfo, Action<bool> callback)
         {
-            string pluginName = modInfo.name;
+            string pluginName = pluginInfo.Name;
             if (pluginStateChangeCallbacks.Count == 0)
             {
-                PluginManager.instance.eventPluginsStateChanged += PluginManager_eventPluginsStateChanged;
-                foreach (var pluginInfo in PluginManager.instance.GetPluginsInfo())
+                PluginManagerInteractor.OnPluginsStateChanged += PluginManager_OnPluginsStateChanged;
+                foreach (var pluginInfo_ in PluginManagerInteractor.GetPluginsInfo())
                 {
-                    pluginEnabledList[pluginInfo.name] = pluginInfo.isEnabled;
+                    pluginEnabledList[pluginInfo_.Name] = pluginInfo_.IsEnabled;
                 }
             }
 
@@ -110,20 +88,20 @@ namespace CommonShared.Utils
             pluginStateChangeCallbacks[pluginName].Add(callback);
         }
 
-        private static void PluginManager_eventPluginsStateChanged()
+        private static void PluginManager_OnPluginsStateChanged()
         {
-            foreach (var pluginInfo in PluginManager.instance.GetPluginsInfo())
+            foreach (var pluginInfo in PluginManagerInteractor.GetPluginsInfo())
             {
                 bool isEnabled;
-                if (pluginEnabledList.TryGetValue(pluginInfo.name, out isEnabled) && pluginInfo.isEnabled != isEnabled)
+                if (pluginEnabledList.TryGetValueOrDefault(pluginInfo.Name, false, out isEnabled) && pluginInfo.IsEnabled != isEnabled)
                 {
-                    pluginEnabledList[pluginInfo.name] = pluginInfo.isEnabled;
+                    pluginEnabledList[pluginInfo.Name] = pluginInfo.IsEnabled;
                     HashSet<Action<bool>> callbacks;
-                    if (pluginStateChangeCallbacks.TryGetValue(pluginInfo.name, out callbacks))
+                    if (pluginStateChangeCallbacks.TryGetValue(pluginInfo.Name, out callbacks))
                     {
                         foreach (var callback in callbacks)
                         {
-                            callback(pluginInfo.isEnabled);
+                            callback(pluginInfo.IsEnabled);
                         }
                     }
                 }
@@ -143,11 +121,11 @@ namespace CommonShared.Utils
         /// <summary>
         /// Unsubscribes from the event when the plugin state changes.
         /// </summary>
-        /// <param name="modInfo">The plugin info.</param>
+        /// <param name="pluginInfo">The plugin info.</param>
         /// <param name="callback">The callback that will be used when the state changes, with a boolean parameter that is true when the plugin is enabled, and false otherwise.</param>
-        public static void UnsubscribePluginStateChange(PluginManager.PluginInfo modInfo, Action<bool> callback)
+        public static void UnsubscribePluginStateChange(IPluginInfoInteractor pluginInfo, Action<bool> callback)
         {
-            string pluginName = modInfo.name;
+            string pluginName = pluginInfo.Name;
             if (pluginStateChangeCallbacks.ContainsKey(pluginName))
             {
                 pluginStateChangeCallbacks[pluginName].Remove(callback);
@@ -159,8 +137,14 @@ namespace CommonShared.Utils
 
             if (pluginStateChangeCallbacks.Count == 0)
             {
-                PluginManager.instance.eventPluginsStateChanged -= PluginManager_eventPluginsStateChanged;
+                PluginManagerInteractor.OnPluginsStateChanged -= PluginManager_OnPluginsStateChanged;
             }
+        }
+
+        public static void Cleanup()
+        {
+            pluginEnabledList.Clear();
+            pluginStateChangeCallbacks.Clear();
         }
     }
 }

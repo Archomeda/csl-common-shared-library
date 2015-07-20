@@ -17,10 +17,10 @@ namespace CommonShared.Events
         public delegate void ToolbarOpenedEventHandler();
 
         private static event ToolbarOpenedEventHandler toolbarOpened;
+
         /// <summary>
         /// Gets fired when the toolbar has been opened.
         /// </summary>
-
         public static event ToolbarOpenedEventHandler ToolbarOpened
         {
             add
@@ -45,10 +45,10 @@ namespace CommonShared.Events
         public delegate void ToolbarClosedEventHandler();
 
         private static event ToolbarClosedEventHandler toolbarClosed;
+
         /// <summary>
         /// Gets fired when the toolbar has been closed.
         /// </summary>
-
         public static event ToolbarClosedEventHandler ToolbarClosed
         {
             add
