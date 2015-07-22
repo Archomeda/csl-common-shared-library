@@ -2,17 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using ColossalFramework.UI;
 using CommonShared.Defs;
 using UnityEngine;
 
-namespace CommonShared.Events
+namespace CommonShared.Proxies.Events
 {
     /// <summary>
     /// Contains various events related to the toolbar.
     /// </summary>
     public static class ToolbarEvents
     {
+        private static int eventSubscriptionCounter = 0;
+
         private static bool isToolbarOpen = false;
 
         public delegate void ToolbarOpenedEventHandler();
@@ -26,12 +29,19 @@ namespace CommonShared.Events
         {
             add
             {
+                Interlocked.Increment(ref eventSubscriptionCounter);
                 StartToolbarEvents();
                 toolbarOpened += value;
             }
             remove
             {
+                int val = Interlocked.Decrement(ref eventSubscriptionCounter);
                 toolbarOpened -= value;
+
+                if (val <= 0)
+                {
+                    StopToolbarEvents();
+                }
             }
         }
 
@@ -54,12 +64,19 @@ namespace CommonShared.Events
         {
             add
             {
+                Interlocked.Increment(ref eventSubscriptionCounter);
                 StartToolbarEvents();
                 toolbarClosed += value;
             }
             remove
             {
+                int val = Interlocked.Decrement(ref eventSubscriptionCounter);
                 toolbarClosed -= value;
+
+                if (val <= 0)
+                {
+                    StopToolbarEvents();
+                }
             }
         }
 
@@ -72,25 +89,53 @@ namespace CommonShared.Events
 
 
         private static bool toolbarEventsStarted;
+        private static object toolbarEventsStartedLock;
 
         private static void StartToolbarEvents()
         {
-            if (!toolbarEventsStarted)
+            lock (toolbarEventsStartedLock)
             {
-                switch (SimulationManager.instance.m_metaData.m_updateMode)
+                if (!toolbarEventsStarted)
                 {
-                    case SimulationManager.UpdateMode.NewGame:
-                    case SimulationManager.UpdateMode.LoadGame:
-                    case SimulationManager.UpdateMode.NewMap:
-                    case SimulationManager.UpdateMode.LoadMap:
-                        HookToolbar();
-                        break;
-                    case SimulationManager.UpdateMode.NewAsset:
-                    case SimulationManager.UpdateMode.LoadAsset:
-                        AssetEditorEvents.AssetEditorModeChanged += AssetEditorEvents_AssetEditorModeChanged;
-                        break;
+                    switch (SimulationManager.instance.m_metaData.m_updateMode)
+                    {
+                        case SimulationManager.UpdateMode.NewGame:
+                        case SimulationManager.UpdateMode.LoadGame:
+                        case SimulationManager.UpdateMode.NewMap:
+                        case SimulationManager.UpdateMode.LoadMap:
+                            HookToolbar();
+                            break;
+                        case SimulationManager.UpdateMode.NewAsset:
+                        case SimulationManager.UpdateMode.LoadAsset:
+                            AssetEditorEvents.AssetEditorModeChanged += AssetEditorEvents_AssetEditorModeChanged;
+                            break;
+                    }
+                    toolbarEventsStarted = true;
                 }
-                toolbarEventsStarted = true;
+            }
+        }
+
+        private static void StopToolbarEvents()
+        {
+            lock (toolbarEventsStartedLock)
+            {
+                if (toolbarEventsStarted)
+                {
+                    switch (SimulationManager.instance.m_metaData.m_updateMode)
+                    {
+                        case SimulationManager.UpdateMode.NewGame:
+                        case SimulationManager.UpdateMode.LoadGame:
+                        case SimulationManager.UpdateMode.NewMap:
+                        case SimulationManager.UpdateMode.LoadMap:
+                            UnhookToolbar();
+                            break;
+                        case SimulationManager.UpdateMode.NewAsset:
+                        case SimulationManager.UpdateMode.LoadAsset:
+                            AssetEditorEvents.AssetEditorModeChanged -= AssetEditorEvents_AssetEditorModeChanged;
+                            break;
+                    }
+                    toolbarEventsStarted = false;
+                }
             }
         }
 
@@ -108,6 +153,18 @@ namespace CommonShared.Events
                 foreach (UIScrollablePanel panel in tsContainer.GetComponentsInChildren<UIScrollablePanel>())
                 {
                     panel.eventVisibilityChanged += ToolbarPanel_VisibilityChanged;
+                }
+            }
+        }
+
+        private static void UnhookToolbar()
+        {
+            UITabContainer tsContainer = GameObject.Find(GameObjectDefs.ID_TSCONTAINER).GetComponent<UITabContainer>();
+            if (tsContainer != null)
+            {
+                foreach (UIScrollablePanel panel in tsContainer.GetComponentsInChildren<UIScrollablePanel>())
+                {
+                    panel.eventVisibilityChanged -= ToolbarPanel_VisibilityChanged;
                 }
             }
         }
