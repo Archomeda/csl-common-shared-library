@@ -89,7 +89,7 @@ namespace CommonShared.Proxies.Events
 
 
         private static bool toolbarEventsStarted;
-        private static object toolbarEventsStartedLock;
+        private static object toolbarEventsStartedLock = new object();
 
         private static void StartToolbarEvents()
         {
