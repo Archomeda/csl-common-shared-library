@@ -66,8 +66,8 @@
     <Compile Include="UI\Extensions\UIHelperBaseExtensions.cs" />
     <Compile Include="UI\Extensions\UITabstripExtensions.cs" />
     <Compile Include="Utils\DetourUtils.cs" />
-    <Compile Include="Events\AssetEditorEvents.cs" />
-    <Compile Include="Events\ToolbarEvents.cs" />
+    <Compile Include="Proxies\Events\AssetEditorEvents.cs" />
+    <Compile Include="Proxies\Events\ToolbarEvents.cs" />
     <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
