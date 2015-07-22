@@ -11,7 +11,7 @@ namespace CommonShared.Configuration
     /// A class that provides basic implementation for loading and saving versioned configuration files.
     /// </summary>
     [XmlRoot("Configuration")]
-    public class VersionedConfig : Config
+    public abstract class VersionedConfig : Config
     {
         /// <summary>
         /// Gets or sets the version of this configuration file.
@@ -31,7 +31,7 @@ namespace CommonShared.Configuration
             {
                 using (FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read))
                 {
-                    VersionedConfig versionedConfig = (VersionedConfig)new XmlSerializer(typeof(VersionedConfig)).Deserialize(fs);
+                    VersionedConfig versionedConfig = (VersionedConfig)new XmlSerializer(typeof(T)).Deserialize(fs);
                     fs.Position = 0;
                     return migrator.Migrate(versionedConfig.Version, fs);
                 }

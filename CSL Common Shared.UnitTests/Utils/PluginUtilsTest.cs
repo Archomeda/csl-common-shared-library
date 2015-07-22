@@ -16,7 +16,7 @@ namespace CommonShared.UnitTests.Utils
     [TestFixture]
     public class PluginUtilsTest
     {
-        IPluginManagerInteractor pluginManagerInteractor;
+        private IPluginManagerInteractor pluginManagerInteractor;
 
         [SetUp]
         public void Init()
@@ -26,7 +26,7 @@ namespace CommonShared.UnitTests.Utils
         }
 
         [TearDown]
-        public void Dispose()
+        public virtual void Dispose()
         {
             PluginUtils.Cleanup();
         }

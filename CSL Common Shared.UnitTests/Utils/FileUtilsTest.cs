@@ -16,11 +16,11 @@ namespace CommonShared.UnitTests.Utils
     [TestFixture]
     public class FileUtilsTest
     {
-        IPluginManagerInteractor pluginManagerInteractor;
-        IDataLocationInteractor dataLocationInteractor;
+        private IPluginManagerInteractor pluginManagerInteractor;
+        private IDataLocationInteractor dataLocationInteractor;
 
         [SetUp]
-        public void Init()
+        public virtual void Init()
         {
             this.pluginManagerInteractor = Substitute.For<IPluginManagerInteractor>();
             PluginUtils.PluginManagerInteractor = this.pluginManagerInteractor;
@@ -30,7 +30,7 @@ namespace CommonShared.UnitTests.Utils
         }
 
         [TearDown]
-        public void Dispose()
+        public virtual void Dispose()
         {
             PluginUtils.Cleanup();
         }

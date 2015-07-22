@@ -64,6 +64,8 @@
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\ConfigTest.cs" />
+    <Compile Include="Configuration\VersionedConfigTest.cs" />
     <Compile Include="Extensions\DictionaryExtensionsTest.cs" />
     <Compile Include="LightSingletonTest.cs" />
     <Compile Include="LoggerTest.cs" />
