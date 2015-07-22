@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ColossalFramework.UI;
+using CommonShared.Defs;
 using UnityEngine;
 
 namespace CommonShared.Events
@@ -101,7 +102,7 @@ namespace CommonShared.Events
 
         private static void HookToolbar()
         {
-            UITabContainer tsContainer = GameObject.Find("TSContainer").GetComponent<UITabContainer>();
+            UITabContainer tsContainer = GameObject.Find(GameObjectDefs.ID_TSCONTAINER).GetComponent<UITabContainer>();
             if (tsContainer != null)
             {
                 foreach (UIScrollablePanel panel in tsContainer.GetComponentsInChildren<UIScrollablePanel>())
