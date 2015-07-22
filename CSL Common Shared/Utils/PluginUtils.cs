@@ -16,7 +16,7 @@ namespace CommonShared.Utils
     /// </summary>
     public static class PluginUtils
     {
-        private static IPluginManagerInteractor pluginManagerInteractor = PluginManagerProxy.Instance;
+        private static IPluginManagerInteractor pluginManagerInteractor = PluginManagerProxy.instance;
         /// <summary>
         /// Gets or sets the plugin manager interactor that will be used.
         /// By default this is <see cref="PluginManagerProxy"/>.

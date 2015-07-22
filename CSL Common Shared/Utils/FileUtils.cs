@@ -15,7 +15,7 @@ namespace CommonShared.Utils
     /// </summary>
     public static class FileUtils
     {
-        private static IDataLocationInteractor dataLocationInteractor = DataLocationProxy.Instance;
+        private static IDataLocationInteractor dataLocationInteractor = DataLocationProxy.instance;
         /// <summary>
         /// Gets or sets the data location interactor that will be used.
         /// By default this is <see cref="DataLocationProxy"/>.

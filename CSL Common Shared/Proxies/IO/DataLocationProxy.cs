@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ColossalFramework;
 using ColossalFramework.IO;
 
 namespace CommonShared.Proxies.IO
 {
-    public class DataLocationProxy : LightSingleton<DataLocationProxy>, IDataLocationInteractor
+    public class DataLocationProxy : SingletonLite<DataLocationProxy>, IDataLocationInteractor
     {
         public string CompanyName
         {

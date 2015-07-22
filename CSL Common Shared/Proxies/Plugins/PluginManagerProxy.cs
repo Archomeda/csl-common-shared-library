@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ColossalFramework;
 using ColossalFramework.Plugins;
 
 namespace CommonShared.Proxies.Plugins
 {
-    public class PluginManagerProxy : LightSingleton<PluginManagerProxy>, IPluginManagerInteractor
+    public class PluginManagerProxy : SingletonLite<PluginManagerProxy>, IPluginManagerInteractor
     {
         public int EnabledModCount
         {
