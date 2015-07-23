@@ -6,5 +6,8 @@ configuration: Release
 cache:
   - packages -> **\packages.config
 
-build_script:
-  - ps: appveyor\Build.ps1
+before_build:
+  - nuget restore
+
+build:
+  verbosity: minimal

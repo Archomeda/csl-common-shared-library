@@ -31,10 +31,10 @@ entirely on how extensively I'm using this.
 ### Compilation Notes
 Please note that setting up your development environment is a bit different from
 the Cities Skylines wiki. Instead of hardcoding various dependencies in the
-solution file, you have to specify the path yourself as a user configuration
-that will not be pushed to the repo. In order to do this, after you have opened
-the project in Visual Studio, go to the project settings, reference paths, and
-add your `SteamApps/Common/Cities_Skylines/Cities_Data/Managed` folder there.
+solution file, you have to specify a new NuGet package source in your Visual
+Studio settings. The source URL you have to add is
+`https://www.myget.org/F/cities-skylines/api/v2`. Make sure that NuGet restores
+the dependencies automatically upon building.
 
 Also, please refrain from adding those hardcoded references in the solution
-file if you want to submit a pull request.
+file when submitting a pull request.

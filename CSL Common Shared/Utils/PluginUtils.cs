@@ -96,9 +96,9 @@ namespace CommonShared.Utils
                 if (pluginEnabledList.TryGetValueOrDefault(pluginInfo.Name, false, out isEnabled) && pluginInfo.IsEnabled != isEnabled)
                 {
                     pluginEnabledList[pluginInfo.Name] = pluginInfo.IsEnabled;
-                    HashSet<Action<bool>> callbacks;
-                    if (pluginStateChangeCallbacks.TryGetValue(pluginInfo.Name, out callbacks))
+                    if (pluginStateChangeCallbacks.ContainsKey(pluginInfo.Name))
                     {
+                        var callbacks = new HashSet<Action<bool>>(pluginStateChangeCallbacks[pluginInfo.Name]);
                         foreach (var callback in callbacks)
                         {
                             callback(pluginInfo.IsEnabled);
