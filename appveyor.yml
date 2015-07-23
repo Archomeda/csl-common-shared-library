@@ -8,3 +8,6 @@ cache:
 
 before_build:
   - nuget restore
+
+build:
+  verbosity: minimal
