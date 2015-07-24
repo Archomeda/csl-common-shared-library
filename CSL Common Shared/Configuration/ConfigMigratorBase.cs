@@ -32,7 +32,7 @@ namespace CommonShared.Configuration
         public T Migrate(uint version, Stream stream)
         {
             T currentConfig = new T();
-            if (version == currentConfig.Version)
+            if (version >= currentConfig.Version)
             {
                 // Using latest version
                 return (T)new XmlSerializer(typeof(T)).Deserialize(stream);

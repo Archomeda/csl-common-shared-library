@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace CommonShared.Events
+namespace CommonShared.Proxies.Events
 {
     /// <summary>
     /// Contains various events related to the asset editor.

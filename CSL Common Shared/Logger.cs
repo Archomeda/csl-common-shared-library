@@ -16,13 +16,11 @@ namespace CommonShared
     {
         /// <summary>
         /// Creates a new logger and sets the prefix to the assembly name of the mod.
-        /// <param name="modInstance">The mod instance.</param>
         /// </summary>
-        public Logger(IUserMod modInstance)
+        /// <param name="modAssembly">The mod assembly.</param>
+        public Logger(Assembly modAssembly)
         {
-            Assembly assembly;
-            PluginUtils.GetPluginInfo(modInstance, out assembly);
-            this.Prefix = string.Format("[{0}]", assembly.GetName().Name);
+            this.Prefix = string.Format("[{0}]", modAssembly.GetName().Name);
         }
 
         /// <summary>

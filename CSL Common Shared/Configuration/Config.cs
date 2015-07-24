@@ -37,7 +37,7 @@ namespace CommonShared.Configuration
         public void SaveConfig(string filename)
         {
             string dirname = Path.GetDirectoryName(filename);
-            if (!Directory.Exists(dirname))
+            if (!string.IsNullOrEmpty(dirname) && !Directory.Exists(dirname))
             {
                 Directory.CreateDirectory(dirname);
             }
