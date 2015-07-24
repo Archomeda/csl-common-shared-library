@@ -80,6 +80,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\ConfigMigratorTest.cs" />
     <Compile Include="Configuration\ConfigTest.cs" />
     <Compile Include="Configuration\VersionedConfigTest.cs" />
     <Compile Include="Extensions\DictionaryExtensionsTest.cs" />
