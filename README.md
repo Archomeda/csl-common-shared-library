@@ -22,7 +22,7 @@ against (meaning, the one you ship with your mod).
 You can include it within your mod in multiple ways, but the way I've done it
 (for now), is by creating a git subtree for the mods that depend on this
 library. You can take a look at
-[Scrollable Toolbar](https://github.com/Archomeda/csl-scrollable-toolbar) or
+[Extended Toolbar](https://github.com/Archomeda/csl-scrollable-toolbar) or
 [Ambient Sound Tuner](https://github.com/Archomeda/csl-ambient-sounds-tuner) as
 examples.
 
