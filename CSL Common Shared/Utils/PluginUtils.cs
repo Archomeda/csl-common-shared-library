@@ -141,7 +141,10 @@ namespace CommonShared.Utils
             }
         }
 
-        public static void Cleanup()
+        /// <summary>
+        /// Cleans up this instance.
+        /// </summary>
+        public static void CleanUp()
         {
             pluginEnabledList.Clear();
             pluginStateChangeCallbacks.Clear();

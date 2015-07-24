@@ -8,7 +8,7 @@ namespace CommonShared.Configuration
 {
     /// <summary>
     /// An interface for implementing configuration migrators.
-    /// Typically you would want to use <see cref="ConfigMigratorBase"/>.
+    /// Typically you would want to use <see cref="T:ConfigMigratorBase`1" />.
     /// </summary>
     /// <typeparam name="T">The configuration object type.</typeparam>
     public interface IConfigMigrator<T> where T : VersionedConfig

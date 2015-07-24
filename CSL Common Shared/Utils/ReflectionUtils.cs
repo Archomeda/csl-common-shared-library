@@ -64,7 +64,7 @@ namespace CommonShared.Utils
         /// <summary>
         /// Invokes a private static method.
         /// </summary>
-        /// <param name="type">The object to invoke the method on.</param>
+        /// <param name="type">The object type to invoke the method on.</param>
         /// <param name="name">The name of the method.</param>
         /// <param name="args">The arguments to pass to the method.</param>
         public static void InvokePrivateStaticMethod(Type type, string name, params object[] args)
@@ -77,7 +77,7 @@ namespace CommonShared.Utils
         /// Invokes a private static method with a return value.
         /// </summary>
         /// <typeparam name="T">The object type of the returned value.</typeparam>
-        /// <param name="obj">The object to invoke the method on.</param>
+        /// <param name="type">The object type to invoke the method on.</param>
         /// <param name="name">The name of the method.</param>
         /// <param name="args">The arguments to pass to the method.</param>
         /// <returns>The return value of the invoked method.</returns>

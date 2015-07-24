@@ -9,7 +9,7 @@ using UnityEngine;
 namespace CommonShared.UI.Extensions
 {
     /// <summary>
-    /// A class that contains extensions for <see cref="UIHelperBase"/> objects.
+    /// A class that contains extensions for <see cref="ICities.UIHelperBase"/> objects.
     /// </summary>
     public static class UIHelperBaseExtensions
     {

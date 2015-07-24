@@ -16,6 +16,9 @@ namespace CommonShared.Configuration
         /// <summary>
         /// Gets or sets the version of this configuration file.
         /// </summary>
+        /// <value>
+        /// The version.
+        /// </value>
         [XmlAttribute("version")]
         public virtual uint Version { get; set; }
 
@@ -25,6 +28,7 @@ namespace CommonShared.Configuration
         /// <typeparam name="T">The config object type.</typeparam>
         /// <param name="filename">The name of the configuration file.</param>
         /// <param name="migrator">The config migrator object.</param>
+        /// <returns>The configuration instance.</returns>
         public static T LoadConfig<T>(string filename, IConfigMigrator<T> migrator) where T : VersionedConfig, new()
         {
             if (File.Exists(filename))

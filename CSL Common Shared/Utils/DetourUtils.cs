@@ -37,9 +37,19 @@ using System.Runtime.InteropServices;
 
 namespace CommonShared.Utils
 {
+    /// <summary>
+    /// A struct that represents a detour calls state.
+    /// </summary>
     public struct DetourCallsState
     {
+        /// <summary>
+        /// A byte representing the state.
+        /// </summary>
         public byte a, b, c, d, e;
+
+        /// <summary>
+        /// A unsigned long represeting the state.
+        /// </summary>
         public ulong f;
     }
 
@@ -52,8 +62,8 @@ namespace CommonShared.Utils
         /// <summary>
         /// Redirects all calls from method 'from' to method 'to'.
         /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
+        /// <param name="from">The method to redirect.</param>
+        /// <param name="to">The method to redirect to.</param>
         public static DetourCallsState RedirectCalls(MethodInfo from, MethodInfo to)
         {
             // GetFunctionPointer enforces compilation of the method.
@@ -62,6 +72,11 @@ namespace CommonShared.Utils
             return PatchJumpTo(fptr1, fptr2);
         }
 
+        /// <summary>
+        /// Reverts a redirect.
+        /// </summary>
+        /// <param name="from">The method to revert the redirect.</param>
+        /// <param name="state">The state.</param>
         public static void RevertRedirect(MethodInfo from, DetourCallsState state)
         {
             var fptr1 = from.MethodHandle.GetFunctionPointer();
