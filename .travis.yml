@@ -8,5 +8,5 @@ install:
   - nuget install NUnit.Runners -OutputDirectory testrunner
 
 script:
-  - xbuild /p:Configuration=Release "CSL Common Shared.sln"
+  - xbuild /verbosity:minimal /p:Configuration=Release "CSL Common Shared.sln"
   - mono ./testrunner/NUnit.Runners.*/tools/nunit-console.exe "./CSL Common Shared.UnitTests/bin/Release/CommonShared.UnitTests.dll"
