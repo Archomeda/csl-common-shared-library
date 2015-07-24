@@ -1,0 +1,12 @@
+language: csharp
+solution: "CSL Common Shared.sln"
+mono:
+  - 3.8.0
+
+install:
+  - nuget restore "CSL Common Shared.sln"
+  - nuget install NUnit.Runners -OutputDirectory testrunner
+
+script:
+  - xbuild /p:Configuration=Release "CSL Common Shared.sln"
+  - mono ./testrunner/NUnit.Runners.*/tools/nunit-console.exe "./CSL Common Shared.UnitTests/bin/Release/CommonShared.UnitTests.dll"
