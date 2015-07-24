@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>CslCommonShared</id>
+    <version>$version$</version>
+    <title>Cities Skylines: Common Shared Library</title>
+    <authors>Archomeda</authors>
+    <owners>Archomeda</owners>
+    <licenseUrl>https://github.com/Archomeda/csl-common-shared-library/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/Archomeda/csl-common-shared-library</projectUrl>
+    <description>Custom library for my Cities Skylines mods.</description>
+  </metadata>
+  <files>
+    <file src="bin\Release\CommonShared.XML" target="lib\net35" />
+  </files>
+</package>
