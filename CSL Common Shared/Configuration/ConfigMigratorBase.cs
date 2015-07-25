@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 namespace CommonShared.Configuration
 {
     /// <summary>
-    /// An abstract class that implements basic functionality of <see cref="IConfigMigrator"/>.
+    /// An abstract class that implements basic functionality of <see cref="T:IConfigMigrator`1"/>.
     /// </summary>
     /// <typeparam name="T">The configuration object type.</typeparam>
     public abstract class ConfigMigratorBase<T> : IConfigMigrator<T> where T : VersionedConfig, new()

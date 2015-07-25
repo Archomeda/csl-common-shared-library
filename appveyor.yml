@@ -1,13 +1,20 @@
-# We follow the versioning of Cities Skylines
-version: 1.1.1.{build}
+version: 1.2.0.{build}
 
 configuration: Release
+
+assembly_info:
+  patch: true
 
 cache:
   - packages -> **\packages.config
 
 before_build:
+  - ps: .appveyor\UpdateBuildVersion.ps1
   - nuget restore
 
 build:
   verbosity: minimal
+  publish_nuget: true
+
+on_success:
+  - ps: .appveyor\PrepareNewBuildVersion.ps1

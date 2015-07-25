@@ -18,6 +18,7 @@ namespace CommonShared.Configuration
         /// </summary>
         /// <typeparam name="T">The config object type.</typeparam>
         /// <param name="filename">The name of the configuration file.</param>
+        /// <returns>The configuration instance.</returns>
         public static T LoadConfig<T>(string filename) where T : new()
         {
             if (File.Exists(filename))

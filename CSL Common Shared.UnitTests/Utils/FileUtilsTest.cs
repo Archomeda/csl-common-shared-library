@@ -32,7 +32,7 @@ namespace CommonShared.UnitTests.Utils
         [TearDown]
         public virtual void Dispose()
         {
-            PluginUtils.Cleanup();
+            PluginUtils.CleanUp();
         }
 
         [Test]

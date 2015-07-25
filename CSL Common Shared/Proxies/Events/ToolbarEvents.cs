@@ -18,6 +18,9 @@ namespace CommonShared.Proxies.Events
 
         private static bool isToolbarOpen = false;
 
+        /// <summary>
+        /// The handler that is used when the toolbar is opened.
+        /// </summary>
         public delegate void ToolbarOpenedEventHandler();
 
         private static event ToolbarOpenedEventHandler toolbarOpened;
@@ -53,6 +56,9 @@ namespace CommonShared.Proxies.Events
         }
 
 
+        /// <summary>
+        /// The handler that is used when the toolbar is closed.
+        /// </summary>
         public delegate void ToolbarClosedEventHandler();
 
         private static event ToolbarClosedEventHandler toolbarClosed;
