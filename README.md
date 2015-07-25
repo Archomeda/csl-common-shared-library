@@ -22,14 +22,14 @@ In order to use this library in your mod, add the NuGet feed
 is to add a `.nuget\NuGet.Config` file (check one of
 [my mods](https://github.com/Archomeda/csl-ambient-sounds-tuner) for an
 example). You need the package `CslCommonShared`. When a newer version is
-available, make sure that you update the library and that you adept your code.
-If you want to stick with a specific version, surround the version with `[` and
-`]`. For more advanced configuration, please check the NuGet documentation. Do
-note that older versions are not supported by me.
+available, make sure that you update the library and adept your code. If you
+want to stick with a specific version, surround the version with `[` and `]`.
+For more advanced configuration, please check the NuGet documentation. Do note
+that older versions are not supported by me.
 
 ## Compilation Notes
-Please note that setting up your development environment is a bit different from
-the Cities Skylines wiki. As you might have noticed, there aren't any hardcoded
+Note that setting up your development environment is a bit different from the
+Cities Skylines wiki. As you might have noticed, there aren't any hardcoded
 references to the assemblies of Cities Skylines. Instead, these dependencies are
 currently maintained by me on a NuGet server. This means that upon building, the
 dependencies should be resolved automatically. If, for some reason, this doesn't
