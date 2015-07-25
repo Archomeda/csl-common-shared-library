@@ -1,4 +1,4 @@
-. .\appveyor\Functions.ps1
+. .\.appveyor\Functions.ps1
 
 if (!$env:APPVEYOR_PULL_REQUEST_NUMBER) {
     if ($env:APPVEYOR_REPO_TAG -eq "true") {

@@ -1,4 +1,4 @@
-. .\appveyor\Functions.ps1
+. .\.appveyor\Functions.ps1
 
 $version = $env:APPVEYOR_BUILD_VERSION
 $csl_version = (Select-Xml -Path "CSL Common Shared\packages.config" -XPath "/packages/package[@id='CitiesSkylines.ICities']").node.version

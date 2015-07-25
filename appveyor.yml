@@ -9,7 +9,7 @@ cache:
   - packages -> **\packages.config
 
 before_build:
-  - ps: appveyor\UpdateBuildVersion.ps1
+  - ps: .appveyor\UpdateBuildVersion.ps1
   - nuget restore
 
 build:
@@ -17,4 +17,4 @@ build:
   publish_nuget: true
 
 on_success:
-  - ps: appveyor\PrepareNewBuildVersion.ps1
+  - ps: .appveyor\PrepareNewBuildVersion.ps1
