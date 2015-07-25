@@ -18,3 +18,13 @@ build:
 
 on_success:
   - ps: .appveyor\PrepareNewBuildVersion.ps1
+
+deploy:
+- provider: NuGet
+  server: https://www.myget.org/F/cities-skylines/api/v2
+  api_key:
+    secure: 7zMC37Jd02dfifYyUH6pmztHwQhUKOOXzdsRuKDws7LQpcl3TRZvKjlqIrO0q/FH
+  skip_symbols: true
+  on:
+    branch: master
+    appveyor_repo_tag: true
