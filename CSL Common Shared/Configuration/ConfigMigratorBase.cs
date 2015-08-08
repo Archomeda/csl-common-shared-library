@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
+using YamlDeserializer = YamlDotNet.Serialization.Deserializer;
 
 namespace CommonShared.Configuration
 {
@@ -24,12 +25,23 @@ namespace CommonShared.Configuration
         protected virtual IDictionary<uint, Type> VersionTypes { get; set; }
 
         /// <summary>
-        /// Migrate a configuration file.
+        /// Migrate an XML configuration file.
         /// </summary>
         /// <param name="version">The current version of the configuration file.</param>
         /// <param name="stream">The stream of the configuration file.</param>
         /// <returns>An up-to-date configuration object.</returns>
         public T Migrate(uint version, Stream stream)
+        {
+            return this.MigrateFromXml(version, stream);
+        }
+
+        /// <summary>
+        /// Migrate an XML configuration file.
+        /// </summary>
+        /// <param name="version">The current version of the configuration file.</param>
+        /// <param name="stream">The stream of the configuration file.</param>
+        /// <returns>An up-to-date configuration object.</returns>
+        public T MigrateFromXml(uint version, Stream stream)
         {
             T currentConfig = new T();
             if (version >= currentConfig.Version)
@@ -47,6 +59,36 @@ namespace CommonShared.Configuration
                     version++;
                 }
                 return (T)config;
+            }
+        }
+
+        /// <summary>
+        /// Migrate a YAML configuration file.
+        /// </summary>
+        /// <param name="version">The current version of the configuration file.</param>
+        /// <param name="stream">The stream of the configuration file.</param>
+        /// <returns>An up-to-date configuration object.</returns>
+        public T MigrateFromYaml(uint version, Stream stream)
+        {
+            using (StreamReader sr = new StreamReader(stream))
+            {
+                T currentConfig = new T();
+                if (version >= currentConfig.Version)
+                {
+                    // Using latest version
+                    return (T)new YamlDeserializer().Deserialize(sr, typeof(T));
+                }
+                else
+                {
+                    // Using an outdated version
+                    object config = new YamlDeserializer().Deserialize(sr, this.VersionTypes[version]);
+                    while (version < currentConfig.Version)
+                    {
+                        config = this.MigrationMethods[version](config);
+                        version++;
+                    }
+                    return (T)config;
+                }
             }
         }
     }

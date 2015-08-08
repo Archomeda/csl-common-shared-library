@@ -20,14 +20,28 @@ namespace CommonShared.UnitTests.Configuration
             }
         }
 
-        [Test]
-        public void LoadVersionedConfig()
+        [TestCase("testconfig.xml")]
+        [TestCase("testconfig.yml")]
+        public void LoadVersionedConfig(string filename)
         {
             IConfigMigrator<TestVersionedConfig> migrator = Substitute.For<IConfigMigrator<TestVersionedConfig>>();
-            TestVersionedConfig testConfig = this.CreateConfig<TestVersionedConfig>("testconfig.xml");
-            migrator.Migrate(testConfig.Version, Arg.Any<Stream>()).Returns(testConfig);
-            TestVersionedConfig testConfigActual = TestVersionedConfig.LoadConfig<TestVersionedConfig>("testconfig.xml", migrator);
-            migrator.Received().Migrate(testConfig.Version, Arg.Any<Stream>());
+            TestVersionedConfig testConfig = this.CreateConfig<TestVersionedConfig>(filename);
+            TestVersionedConfig testConfigActual = null;
+            switch (Path.GetExtension(filename))
+            {
+                case ".xml":
+                    migrator.MigrateFromXml(testConfig.Version, Arg.Any<Stream>()).Returns(testConfig);
+                    testConfigActual = TestVersionedConfig.LoadConfig<TestVersionedConfig>(filename, migrator);
+                    migrator.Received().MigrateFromXml(testConfig.Version, Arg.Any<Stream>());
+                    break;
+                case ".yml":
+                    migrator.MigrateFromYaml(testConfig.Version, Arg.Any<Stream>()).Returns(testConfig);
+                    testConfigActual = TestVersionedConfig.LoadConfig<TestVersionedConfig>(filename, migrator);
+                    migrator.Received().MigrateFromYaml(testConfig.Version, Arg.Any<Stream>());
+                    break;
+                default:
+                    throw new Exception("Not an XML or YAML file");
+            }
             Assert.AreEqual(testConfig.Version, testConfigActual.Version, "Returned config is not the same as a new config");
         }
 
@@ -41,15 +55,29 @@ namespace CommonShared.UnitTests.Configuration
             Assert.AreEqual(testConfig.Version, testConfigActual.Version, "Returned config is not the same as a new config");
         }
 
-        [Test]
-        public void LoadVersionedConfigSubDirectory()
+        [TestCase("testconfig.xml")]
+        [TestCase("testconfig.yml")]
+        public void LoadVersionedConfigSubDirectory(string filename)
         {
-            string path = Path.Combine("testconfig", "testconfig.xml");
+            string path = Path.Combine("testconfig", filename);
             IConfigMigrator<TestVersionedConfig> migrator = Substitute.For<IConfigMigrator<TestVersionedConfig>>();
             TestVersionedConfig testConfig = this.CreateConfig<TestVersionedConfig>(path);
-            migrator.Migrate(testConfig.Version, Arg.Any<Stream>()).Returns(testConfig);
-            TestVersionedConfig testConfigActual = TestVersionedConfig.LoadConfig<TestVersionedConfig>(path, migrator);
-            migrator.Received().Migrate(testConfig.Version, Arg.Any<Stream>());
+            TestVersionedConfig testConfigActual = null;
+            switch (Path.GetExtension(filename))
+            {
+                case ".xml":
+                    migrator.MigrateFromXml(testConfig.Version, Arg.Any<Stream>()).Returns(testConfig);
+                    testConfigActual = TestVersionedConfig.LoadConfig<TestVersionedConfig>(path, migrator);
+                    migrator.Received().MigrateFromXml(testConfig.Version, Arg.Any<Stream>());
+                    break;
+                case ".yml":
+                    migrator.MigrateFromYaml(testConfig.Version, Arg.Any<Stream>()).Returns(testConfig);
+                    testConfigActual = TestVersionedConfig.LoadConfig<TestVersionedConfig>(path, migrator);
+                    migrator.Received().MigrateFromYaml(testConfig.Version, Arg.Any<Stream>());
+                    break;
+                default:
+                    throw new Exception("Not an XML or YAML file");
+            }
             Assert.AreEqual(testConfig.Version, testConfigActual.Version, "Returned config is not the same as a new config");
         }
     }

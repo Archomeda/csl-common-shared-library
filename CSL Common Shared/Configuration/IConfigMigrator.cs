@@ -14,11 +14,28 @@ namespace CommonShared.Configuration
     public interface IConfigMigrator<T> where T : VersionedConfig
     {
         /// <summary>
-        /// Migrate a configuration file.
+        /// Migrate an XML configuration file.
         /// </summary>
         /// <param name="version">The current version of the configuration file.</param>
         /// <param name="stream">The stream of the configuration file.</param>
         /// <returns>An up-to-date configuration object.</returns>
+        [Obsolete("Use MigrateFromXml or MigrateFromYaml.")]
         T Migrate(uint version, Stream stream);
+
+        /// <summary>
+        /// Migrate an XML configuration file.
+        /// </summary>
+        /// <param name="version">The current version of the configuration file.</param>
+        /// <param name="stream">The stream of the configuration file.</param>
+        /// <returns>An up-to-date configuration object.</returns>
+        T MigrateFromXml(uint version, Stream stream);
+
+        /// <summary>
+        /// Migrate a YAML configuration file.
+        /// </summary>
+        /// <param name="version">The current version of the configuration file.</param>
+        /// <param name="stream">The stream of the configuration file.</param>
+        /// <returns>An up-to-date configuration object.</returns>
+        T MigrateFromYaml(uint version, Stream stream);
     }
 }
