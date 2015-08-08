@@ -26,6 +26,8 @@ namespace CommonShared.UnitTests.Configuration
         {
             if (File.Exists("testconfig.xml"))
                 File.Delete("testconfig.xml");
+            if (File.Exists("testconfig.yml"))
+                File.Delete("testconfig.yml");
             if (Directory.Exists("testconfig"))
                 Directory.Delete("testconfig", true);
         }
@@ -37,11 +39,12 @@ namespace CommonShared.UnitTests.Configuration
             return (T)config;
         }
 
-        [Test]
-        public void LoadConfig()
+        [TestCase("testconfig.xml")]
+        [TestCase("testconfig.yml")]
+        public void LoadConfig(string filename)
         {
-            TestConfig testConfig = this.CreateConfig<TestConfig>("testconfig.xml");
-            TestConfig testConfigActual = TestConfig.LoadConfig<TestConfig>("testconfig.xml");
+            TestConfig testConfig = this.CreateConfig<TestConfig>(filename);
+            TestConfig testConfigActual = TestConfig.LoadConfig<TestConfig>(filename);
             Assert.AreEqual(testConfig.SomeString, testConfigActual.SomeString);
         }
 
@@ -54,26 +57,29 @@ namespace CommonShared.UnitTests.Configuration
             Assert.AreEqual(testConfig.SomeString, testConfigActual.SomeString, "Returned config is not the same as a new config");
         }
 
-        [Test]
-        public void SaveConfig()
+        [TestCase("testconfig.xml")]
+        [TestCase("testconfig.yml")]
+        public void SaveConfig(string filename)
         {
-            Assert.DoesNotThrow(() => this.CreateConfig<TestConfig>("testconfig.xml"), "Should succeed properly when saving config");
-            Assert.IsTrue(File.Exists("testconfig.xml"), "Config file should exist");
+            Assert.DoesNotThrow(() => this.CreateConfig<TestConfig>(filename), "Should succeed properly when saving config");
+            Assert.IsTrue(File.Exists(filename), "Config file should exist");
         }
 
-        [Test]
-        public void LoadConfigSubDirectory()
+        [TestCase("testconfig.xml")]
+        [TestCase("testconfig.yml")]
+        public void LoadConfigSubDirectory(string filename)
         {
-            string path = Path.Combine("testconfig", "testconfig.xml");
+            string path = Path.Combine("testconfig", filename);
             TestConfig testConfig = this.CreateConfig<TestConfig>(path);
             TestConfig testConfigActual = TestConfig.LoadConfig<TestConfig>(path);
             Assert.AreEqual(testConfig.SomeString, testConfigActual.SomeString);
         }
 
-        [Test]
-        public void SaveConfigSubDirectory()
+        [TestCase("testconfig.xml")]
+        [TestCase("testconfig.yml")]
+        public void SaveConfigSubDirectory(string filename)
         {
-            string path = Path.Combine("testconfig", "testconfig.xml");
+            string path = Path.Combine("testconfig", filename);
             Assert.DoesNotThrow(() => this.CreateConfig<TestConfig>(path), "Should succeed properly when saving config");
             Assert.IsTrue(File.Exists(path), "Config file should exist");
         }

@@ -60,40 +60,67 @@ namespace CommonShared.UnitTests.Configuration
         {
             if (File.Exists("testconfig.xml"))
                 File.Delete("testconfig.xml");
+            if (File.Exists("testconfig.yml"))
+                File.Delete("testconfig.yml");
         }
 
-        [Test]
-        public void MigrateFromOlderVersion()
+        [TestCase("testconfig.xml")]
+        [TestCase("testconfig.yml")]
+        public void MigrateFromOlderVersion(string filename)
         {
             TestVersionedConfigV0 oldConfig = new TestVersionedConfigV0();
             oldConfig.SomeString = "SomeTestString";
-            oldConfig.SaveConfig("testconfig.xml");
+            oldConfig.SaveConfig(filename);
 
-            using (var stream = File.OpenRead("testconfig.xml"))
+            using (var stream = File.OpenRead(filename))
             {
                 TestConfigMigrator migrator = new TestConfigMigrator();
-                TestVersionedConfigV1 newConfig = migrator.Migrate(oldConfig.Version, stream);
+                TestVersionedConfigV1 newConfig = null;
+                switch (Path.GetExtension(filename))
+                {
+                    case ".xml":
+                        newConfig = migrator.MigrateFromXml(oldConfig.Version, stream);
+                        break;
+                    case ".yml":
+                        newConfig = migrator.MigrateFromYaml(oldConfig.Version, stream);
+                        break;
+                    default:
+                        throw new Exception("Not an XML or YAML file");
+                }
                 Assert.AreEqual(oldConfig.SomeString, newConfig.SomeString2);
             }
         }
 
-        [Test]
-        public void MigrateFromSameVersion()
+        [TestCase("testconfig.xml")]
+        [TestCase("testconfig.yml")]
+        public void MigrateFromSameVersion(string filename)
         {
             TestVersionedConfigV1 oldConfig = new TestVersionedConfigV1();
             oldConfig.SomeString2 = "SomeTestString";
-            oldConfig.SaveConfig("testconfig.xml");
+            oldConfig.SaveConfig(filename);
 
-            using (var stream = File.OpenRead("testconfig.xml"))
+            using (var stream = File.OpenRead(filename))
             {
                 TestConfigMigrator migrator = new TestConfigMigrator();
-                TestVersionedConfigV1 newConfig = migrator.Migrate(oldConfig.Version, stream);
+                TestVersionedConfigV1 newConfig = null;
+                switch (Path.GetExtension(filename))
+                {
+                    case ".xml":
+                        newConfig = migrator.MigrateFromXml(oldConfig.Version, stream);
+                        break;
+                    case ".yml":
+                        newConfig = migrator.MigrateFromYaml(oldConfig.Version, stream);
+                        break;
+                    default:
+                        throw new Exception("Not an XML or YAML file");
+                }
                 Assert.AreEqual(oldConfig.SomeString2, newConfig.SomeString2);
             }
         }
 
-        [Test]
-        public void MigrateFromNewerVersion()
+        [TestCase("testconfig.xml")]
+        [TestCase("testconfig.yml")]
+        public void MigrateFromNewerVersion(string filename)
         {
             // Migrating from a newer version is not supported
             // The migrator should just deserialize the configuration as the latest version available instead
@@ -101,12 +128,23 @@ namespace CommonShared.UnitTests.Configuration
             TestVersionedConfigV1 oldConfig = new TestVersionedConfigV1();
             oldConfig.SomeString2 = "SomeTestString";
             oldConfig.Version = 2; // Force a 'newer' version
-            oldConfig.SaveConfig("testconfig.xml");
+            oldConfig.SaveConfig(filename);
 
-            using (var stream = File.OpenRead("testconfig.xml"))
+            using (var stream = File.OpenRead(filename))
             {
                 TestConfigMigrator migrator = new TestConfigMigrator();
-                TestVersionedConfigV1 newConfig = migrator.Migrate(oldConfig.Version, stream);
+                TestVersionedConfigV1 newConfig = null;
+                switch (Path.GetExtension(filename))
+                {
+                    case ".xml":
+                        newConfig = migrator.MigrateFromXml(oldConfig.Version, stream);
+                        break;
+                    case ".yml":
+                        newConfig = migrator.MigrateFromYaml(oldConfig.Version, stream);
+                        break;
+                    default:
+                        throw new Exception("Not an XML or YAML file");
+                }
                 Assert.AreEqual(oldConfig.SomeString2, newConfig.SomeString2);
             }
         }
