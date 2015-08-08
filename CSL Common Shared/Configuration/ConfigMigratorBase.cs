@@ -30,6 +30,7 @@ namespace CommonShared.Configuration
         /// <param name="version">The current version of the configuration file.</param>
         /// <param name="stream">The stream of the configuration file.</param>
         /// <returns>An up-to-date configuration object.</returns>
+        [Obsolete("Please use MigrateFromXml or MigrateFromYaml instead.")]
         public T Migrate(uint version, Stream stream)
         {
             return this.MigrateFromXml(version, stream);
