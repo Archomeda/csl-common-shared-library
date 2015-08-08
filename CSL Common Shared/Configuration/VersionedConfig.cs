@@ -24,7 +24,7 @@ namespace CommonShared.Configuration
         /// The version.
         /// </value>
         [XmlAttribute("version")]
-        [YamlMember(Alias = "version", Order = -1)]
+        [YamlMember(Alias = "ConfigVersion", Order = -1)]
         public virtual uint Version { get; set; }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace CommonShared.Configuration
                 YamlStream doc = new YamlStream();
                 doc.Load(sr);
                 var mapping = (YamlMappingNode)doc.Documents[0].RootNode;
-                uint version = uint.Parse(((YamlScalarNode)mapping.Children[new YamlScalarNode("version")]).Value);
+                uint version = uint.Parse(((YamlScalarNode)mapping.Children[new YamlScalarNode("ConfigVersion")]).Value);
                 fs.Position = 0;
                 return migrator.MigrateFromYaml(version, fs);
             }
