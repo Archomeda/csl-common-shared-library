@@ -42,7 +42,7 @@ namespace CommonShared.Utils
         /// </summary>
         /// <param name="workshopIds">The workshop IDs.</param>
         /// <returns>A dictionary with the plugins that have been found.</returns>
-        public static IDictionary<ulong, IPluginInfoInteractor> GetPluginInfosOf(HashSet<ulong> workshopIds)
+        public static IDictionary<ulong, IPluginInfoInteractor> GetPluginInfosOf(IEnumerable<ulong> workshopIds)
         {
             return PluginManagerInteractor.GetPluginsInfo()
                 .Where(i => workshopIds.Contains(i.PublishedFileID.AsUInt64))
