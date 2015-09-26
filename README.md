@@ -2,7 +2,7 @@
 [![AppVeyor](https://img.shields.io/appveyor/ci/Archomeda/csl-common-shared-library/master.svg?label=AppVeyor)](https://ci.appveyor.com/project/Archomeda/csl-common-shared-library/branch/master)
 [![Travis](https://img.shields.io/travis/Archomeda/csl-common-shared-library/master.svg?label=Travis)](https://travis-ci.org/Archomeda/csl-common-shared-library)
 ![MyGet](https://img.shields.io/myget/cities-skylines/v/CslCommonShared.svg?label=MyGet)
-![Cities Skylines](https://img.shields.io/badge/Cities_Skylines-v1.2.0-f3-blue.svg)
+![Cities Skylines](https://img.shields.io/badge/Cities_Skylines-v1.2.0--f3-blue.svg)
 
 This small library is used for my own mods to prevent duplicated code across
 multiple mods. You can use it for your own mods as well, but keep in mind that
