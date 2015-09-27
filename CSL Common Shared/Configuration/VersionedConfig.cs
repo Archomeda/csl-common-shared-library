@@ -64,7 +64,9 @@ namespace CommonShared.Configuration
             {
                 XmlDocument doc = new XmlDocument();
                 doc.Load(fs);
-                uint version = uint.Parse(doc.DocumentElement.Attributes["version"].Value);
+                uint version = 0;
+                if (doc.DocumentElement.HasAttribute("version"))
+                    version = uint.Parse(doc.DocumentElement.Attributes["version"].Value);
                 fs.Position = 0;
                 return migrator.MigrateFromXml(version, fs);
             }
@@ -86,7 +88,9 @@ namespace CommonShared.Configuration
                 YamlStream doc = new YamlStream();
                 doc.Load(sr);
                 var mapping = (YamlMappingNode)doc.Documents[0].RootNode;
-                uint version = uint.Parse(((YamlScalarNode)mapping.Children[new YamlScalarNode("ConfigVersion")]).Value);
+                uint version = 0;
+                if (mapping.Children.ContainsKey(new YamlScalarNode("ConfigVersion")))
+                    version = uint.Parse(((YamlScalarNode)mapping.Children[new YamlScalarNode("ConfigVersion")]).Value);
                 fs.Position = 0;
                 return migrator.MigrateFromYaml(version, fs);
             }
