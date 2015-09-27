@@ -17,7 +17,14 @@ namespace CommonShared.Utils
         [Flags]
         public enum Dlc
         {
+            /// <summary>
+            /// No DLC.
+            /// </summary>
             None = 0,
+
+            /// <summary>
+            /// After Dark DLC.
+            /// </summary>
             AfterDark = 1
         }
 
