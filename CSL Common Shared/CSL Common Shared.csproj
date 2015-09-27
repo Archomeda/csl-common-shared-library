@@ -91,6 +91,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\Window.cs" />
     <Compile Include="Utils\AtlasUtils.cs" />
+    <Compile Include="Utils\DlcUtils.cs" />
     <Compile Include="Utils\FileUtils.cs" />
     <Compile Include="Proxies\Plugins\IPluginInfoInteractor.cs" />
     <Compile Include="Proxies\Plugins\IPluginManagerInteractor.cs" />
