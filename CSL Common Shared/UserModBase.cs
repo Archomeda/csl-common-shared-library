@@ -13,9 +13,8 @@ namespace CommonShared
     /// Provides basic implementation for a mod.
     /// </summary>
     /// <typeparam name="T">The type of the inherited class of this abstract class.</typeparam>
-    public abstract class UserModBase<T> : LoadingExtensionBase, IUserMod where T : IUserMod
+    public abstract class UserModBase<T> : LoadingExtensionBase, IUserMod, IUserModStateChangeEvents where T : IUserMod
     {
-        private bool initialized;
         private bool isValid;
 
         /// <summary>
@@ -64,49 +63,6 @@ namespace CommonShared
         public Logger Log { get; private set; }
 
 
-        /// <summary>
-        /// Gets the name of the mod.
-        /// </summary>
-        /// <value>
-        /// The name of the mod.
-        /// </value>
-        public abstract string ModName { get; }
-
-        /// <summary>
-        /// Gets the mod description.
-        /// </summary>
-        /// <value>
-        /// The mod description.
-        /// </value>
-        public abstract string ModDescription { get; }
-
-
-        private void Initialize()
-        {
-            this.Log = new Logger(this.GetType().Assembly);
-            this.PluginInfo = PluginUtils.GetPluginInfo(this);
-            UserModBase<T>.Instance = (T)(object)this; // Make the compiler shut up about non-existing conversions
-
-            this.isValid = this.CheckValidity();
-            if (!this.isValid)
-                return;
-
-            this.CheckIncompatibility();
-
-            PluginUtils.SubscribePluginStateChange(this, enabled =>
-            {
-                if (isValid)
-                {
-                    if (enabled)
-                        this.OnModActivated();
-                    else
-                        this.OnModDeactivated();
-                }
-            });
-
-            this.OnModInitializing(this.PluginInfo.IsEnabled);
-        }
-
         private bool CheckIncompatibility()
         {
             var list = PluginUtils.GetPluginInfosOf(this.IncompatibleMods);
@@ -135,7 +91,7 @@ namespace CommonShared
                 this.Log.Error("YOU ARE CURRENTLY USING AN UNAUTHORIZED PUBLICATION OF THE MOD '{0}' WITH WORKSHOP ID {1}.\r\n" +
                     "Please use the original version that can be found at http://steamcommunity.com/sharedfiles/filedetails/?id={2}.\r\n\r\n" +
                     "This version will not be loaded. Don't forget to report this version on the original workshop item page as it's most likely stolen (it has happened before).",
-                    this.ModName.ToUpper(), pluginInfo.PublishedFileID.AsUInt64, this.WorkshopId);
+                    this.Name.ToUpper(), pluginInfo.PublishedFileID.AsUInt64, this.WorkshopId);
                 return false;
             }
             return true;
@@ -150,21 +106,7 @@ namespace CommonShared
         /// <value>
         /// The name of the mod.
         /// </value>
-        public string Name
-        {
-            get
-            {
-                // Hacky way to load on main menu here, but it will have to do
-                if (!this.initialized)
-                {
-                    this.Initialize();
-                    this.initialized = true;
-                }
-                if (this.isValid && !LoadingManager.instance.m_loadingComplete)
-                    this.OnMainMenuLoading();
-                return this.ModName;
-            }
-        }
+        public abstract string Name { get; }
 
         /// <summary>
         /// Gets the mod description.
@@ -172,7 +114,37 @@ namespace CommonShared
         /// <value>
         /// The mod description.
         /// </value>
-        public string Description { get { return this.ModDescription; } }
+        public abstract string Description { get; }
+
+        #endregion
+
+
+        #region IUserModStateChangeEvents members
+
+        /// <summary>
+        /// Called when the mod is enabled.
+        /// </summary>
+        public void OnEnabled()
+        {
+            this.Log = new Logger(this.GetType().Assembly);
+            this.PluginInfo = PluginUtils.GetPluginInfo(this);
+            UserModBase<T>.Instance = (T)(object)this; // Make the compiler shut up about non-existing conversions
+
+            this.isValid = this.CheckValidity();
+            if (!this.isValid)
+                return;
+
+            this.CheckIncompatibility();
+            this.OnModInitializing();
+        }
+
+        /// <summary>
+        /// Called when the mod is disabled.
+        /// </summary>
+        public void OnDisabled()
+        {
+            this.OnModUninitializing();
+        }
 
         #endregion
 
@@ -230,23 +202,12 @@ namespace CommonShared
         /// <summary>
         /// Called when this mod is being initialized.
         /// </summary>
-        /// <param name="enabled">This value is <c>true</c> if the mod is enabled; false otherwise.</param>
-        public virtual void OnModInitializing(bool enabled) { }
+        public virtual void OnModInitializing() { }
 
         /// <summary>
-        /// Called when this mod is activated through the mod panel.
+        /// Called when this mod is being uninitialized.
         /// </summary>
-        public virtual void OnModActivated() { }
-
-        /// <summary>
-        /// Called when this mod is deactivated through the mod panel.
-        /// </summary>
-        public virtual void OnModDeactivated() { }
-
-        /// <summary>
-        /// Called when the game has started loading the main menu.
-        /// </summary>
-        public virtual void OnMainMenuLoading() { }
+        public virtual void OnModUninitializing() { }
 
         /// <summary>
         /// Called when the mod instance is created.
